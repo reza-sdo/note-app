@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 
-function AddNewNote() {
+function AddNewNote({ onHandelNotes }) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
     const handelSubmit = (e) => {
         e.preventDefault();
+
+        if (!title || !description) {
+            alert("No No");
+            return;
+        }
         const newNote = {
             title,
             description,
@@ -13,6 +18,7 @@ function AddNewNote() {
             completed: false,
             createAt: new Date().toISOString(),
         };
+        onHandelNotes(newNote);
         setTitle("");
         setDescription("");
     };
