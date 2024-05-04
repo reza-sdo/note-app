@@ -1,4 +1,4 @@
-import React from "react";
+
 
 function NoteList({ notes, onDelete, onCompleted, sortBy }) {
   let sortedNotes;

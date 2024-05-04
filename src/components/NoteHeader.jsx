@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+
 function NoteHeader({ notes , sortBy , onSort }) {
   return (
     <div className="note-header">
