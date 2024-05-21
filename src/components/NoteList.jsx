@@ -1,7 +1,11 @@
+import { useNotes, useNotesDispatch } from "../context/NoteContext";
+import { useSortByContext } from "../context/SortByContext";
 
-
-function NoteList({ notes, onDelete, onCompleted, sortBy }) {
-  let sortedNotes;
+function NoteList() {
+  const notes = useNotes();
+  const sortBy = useSortByContext();
+  console.log(sortBy);
+  let sortedNotes = notes;
 
   if (sortBy === "latest") {
     sortedNotes = [...notes].sort(
@@ -13,27 +17,20 @@ function NoteList({ notes, onDelete, onCompleted, sortBy }) {
       (a, b) => new Date(a.createAt) - new Date(b.createAt)
     );
   }
-  if (sortBy === "completed")
-    // sortedNotes = [...notes].sort(
-    //   (a, b) => Number(b.completed) - Number(a.completed)
-    // );
-    sortedNotes = notes.filter((n) => n.completed);
+  if (sortBy === "completed") sortedNotes = notes.filter((n) => n.completed);
 
   return (
     <div className="note-list">
       {sortedNotes.map((note) => (
-        <NoteItem
-          key={note.id}
-          note={note}
-          onDelete={onDelete}
-          onCompleted={onCompleted}
-        />
+        <NoteItem key={note.id} note={note} />
       ))}
     </div>
   );
 }
 
-function NoteItem({ note, onDelete, onCompleted }) {
+function NoteItem({ note }) {
+  const dispatch = useNotesDispatch();
+
   const options = {
     year: "numeric",
     month: "short",
@@ -50,13 +47,24 @@ function NoteItem({ note, onDelete, onCompleted }) {
           <p className="desc">{note.description}</p>
         </div>
         <div className="actions">
-          <button onClick={() => onDelete(note.id)}>❌</button>
+          <button
+            onClick={() =>
+              dispatch({
+                type: "delete",
+                payload: note.id,
+              })
+            }
+          >
+            ❌
+          </button>
           <input
             type="checkbox"
             name=""
             id={note.id}
             // onChange={() => onCompleted(note.id)}
-            onChange={onCompleted}
+            onChange={(event) => {
+              dispatch({ type: "completed", payload: event });
+            }}
           />
         </div>
       </div>
